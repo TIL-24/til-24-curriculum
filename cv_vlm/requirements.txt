@@ -1,0 +1,10 @@
+torch
+pandas
+numpy
+seaborn
+ipykernel
+transformers[torch]
+datasets
+albumentations
+timm
+ipywidgets
