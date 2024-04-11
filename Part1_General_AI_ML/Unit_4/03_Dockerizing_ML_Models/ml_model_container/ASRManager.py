@@ -1,7 +1,5 @@
-# from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import torch
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
-import librosa
 import io
 import soundfile as sf
 

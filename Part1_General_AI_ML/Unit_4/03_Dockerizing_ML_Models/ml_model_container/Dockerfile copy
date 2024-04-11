@@ -1,3 +1,4 @@
+# using a GCP deep learning container with torch 2.0
 FROM us-docker.pkg.dev/deeplearning-platform-release/gcr.io/pytorch-gpu.2-0.py310
 
 # Keeps Python from generating .pyc files in the container
