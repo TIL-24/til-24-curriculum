@@ -1,8 +1,8 @@
-torch
 pandas
 numpy
 seaborn
 ipykernel
+torch
 transformers[torch]
 datasets
 albumentations
