@@ -2,7 +2,9 @@ pandas
 numpy
 seaborn
 ipykernel
+jupyterlab
 torch
+torchsummary 
 transformers[torch]
 datasets
 albumentations
