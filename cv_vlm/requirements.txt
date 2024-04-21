@@ -10,4 +10,5 @@ datasets
 albumentations
 timm
 trl # VLM training
+lmms-eval # VLM evaluation
 ipywidgets
