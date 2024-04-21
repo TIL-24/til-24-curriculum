@@ -9,4 +9,5 @@ transformers[torch]
 datasets
 albumentations
 timm
+trl # VLM training
 ipywidgets
