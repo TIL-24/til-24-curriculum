@@ -4,9 +4,10 @@ seaborn
 ipykernel
 ipywidgets
 jupyterlab
-torch
+torch>=2.2.2
+torchvision>=0.17.2
 torchinfo
-transformers[torch]
+transformers[torch]>=4.39.3
 datasets
 albumentations
 timm
