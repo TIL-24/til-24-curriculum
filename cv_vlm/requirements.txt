@@ -4,11 +4,12 @@ seaborn
 ipykernel
 jupyterlab
 torch
-torchsummary 
+torchinfo
 transformers[torch]
 datasets
 albumentations
 timm
+pycocotools #rcnn ft
 trl # VLM training
 lmms-eval # VLM evaluation
 ipywidgets
