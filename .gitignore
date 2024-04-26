@@ -70,6 +70,8 @@ instance/
 *data/
 datasets/
 *runs/
+*.zip
+wandb/
 
 # Scrapy stuff:
 .scrapy

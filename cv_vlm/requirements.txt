@@ -2,9 +2,14 @@ pandas
 numpy
 seaborn
 ipykernel
+ipywidgets
+jupyterlab
 torch
+torchinfo
 transformers[torch]
 datasets
 albumentations
 timm
-ipywidgets
+pycocotools #rcnn ft
+trl # VLM training
+lmms-eval # VLM evaluation
