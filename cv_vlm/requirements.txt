@@ -14,3 +14,4 @@ timm
 pycocotools #rcnn ft
 trl # VLM training
 lmms-eval # VLM evaluation
+ultralytics
