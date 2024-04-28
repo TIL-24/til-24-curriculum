@@ -12,6 +12,8 @@ datasets
 albumentations
 timm
 pycocotools #rcnn ft
+bitsandbytes
+accelerate
 trl # VLM training
 lmms-eval # VLM evaluation
 ultralytics
