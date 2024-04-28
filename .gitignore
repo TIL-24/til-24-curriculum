@@ -65,13 +65,15 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
-# OpenCV weights
+# custom
 *.pt
 *data/
 datasets/
 *runs/
 *.zip
 wandb/
+*.bin
+*.json
 
 # Scrapy stuff:
 .scrapy
