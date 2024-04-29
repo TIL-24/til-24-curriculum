@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM us-docker.pkg.dev/deeplearning-platform-release/gcr.io/pytorch-gpu.2-2.py310
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
