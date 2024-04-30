@@ -1,6 +1,5 @@
 fastapi
 uvicorn[standard]
 pydantic
-timm
 transformers==4.37.0
 accelerate
