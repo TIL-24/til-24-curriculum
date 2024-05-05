@@ -1,5 +1,5 @@
-# Use an official PyTorch runtime as a parent image
-FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
 # Install pip packages
 RUN pip install fastapi uvicorn Pillow torchvision python-multipart
