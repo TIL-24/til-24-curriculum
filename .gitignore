@@ -72,6 +72,16 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+# custom
+*.pt
+*data/
+datasets/
+*runs/
+*.zip
+wandb/
+*.bin
+*.json
+
 # Scrapy stuff:
 .scrapy
 
