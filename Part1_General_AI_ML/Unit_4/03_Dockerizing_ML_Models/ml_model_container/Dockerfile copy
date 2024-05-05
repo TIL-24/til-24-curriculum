@@ -1,0 +1,26 @@
+# using a GCP deep learning container with torch 2.0
+FROM us-docker.pkg.dev/deeplearning-platform-release/gcr.io/pytorch-gpu.2-0.py310
+
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the current directory contents into the container at /usr/src/app
+COPY . .
+
+# Install any needed packages specified in requirements.txt
+RUN pip install -U pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# install accelerate and uvicorn
+RUN pip install accelerate
+
+RUN pip install "uvicorn[standard]"
+
+# start model service
+CMD uvicorn api_service:app --port 5001 --host 0.0.0.0

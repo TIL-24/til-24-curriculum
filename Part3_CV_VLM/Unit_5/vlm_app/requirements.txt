@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+pydantic
+transformers==4.37.0
+accelerate
