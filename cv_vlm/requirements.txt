@@ -17,3 +17,4 @@ accelerate
 trl # VLM training
 lmms-eval # VLM evaluation
 ultralytics
+torchmetrics
