@@ -13,7 +13,7 @@ EXPOSE 8000
 # Define environment variable
 ENV MODEL_PATH=/usr/src/app/models
 
-COPY models models
+# COPY models models
 COPY app.py app.py
 
 # Run app.py when the container launches
