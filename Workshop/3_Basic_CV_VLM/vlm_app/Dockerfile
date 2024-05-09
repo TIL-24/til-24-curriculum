@@ -11,10 +11,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Define environment variable
-ENV MODEL_PATH=/usr/src/app/models
+# ENV MODEL_PATH=/usr/src/app/models
 
-# COPY models models
-COPY app.py app.py
+# COPY 
+COPY . /usr/src/app
+RUN ls
 
 # Run app.py when the container launches
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
