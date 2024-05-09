@@ -13,7 +13,7 @@ conda activate python310cv
 # install ipykernel when logged in the new env:
 
 ```bash
-conda install ipykernel pandas numpy seaborn scikit-learn
+conda install ipykernel pandas numpy seaborn scikit-learn pytorch==2.2.2 torchvision==0.17.2 pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
 # install the ipython kernel at user level
@@ -22,9 +22,8 @@ conda install ipykernel pandas numpy seaborn scikit-learn
 ipython kernel install --user --name=python310cv
 ```
 
-# conda install requirements
+# install requirements
 
 ```bash
-conda install pytorch==2.2.2 torchvision==0.17.2 pytorch-cuda=12.1 -c pytorch -c nvidia
 pip install -r requirements.txt
 ```
