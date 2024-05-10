@@ -14,11 +14,20 @@ import torch
 from urllib.request import urlretrieve
 from transformers import CLIPProcessor, CLIPModel
 from os import remove
+from transformers import (
+    AutoImageProcessor,
+    AutoModelForObjectDetection,
+    CLIPProcessor,
+    CLIPModel,
+)
 
 app = FastAPI()
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+detr_model = AutoModelForObjectDetection.from_pretrained("facebook/detr-resnet-50", device_map=device)
+detr_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50", device_map=device)
+clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", device_map=device)
+clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", device_map=device)
 
 def load_image(path_or_url):
     """Loads an image from a given URL or path. If the input is a URL,
@@ -72,18 +81,13 @@ def object_detection_predict(image):
 
 
 def clip_predict(image, labels):
-    """Runs CLIP (Contrastive Language-Image Pre-training) on a given image with the given labels.
-    The image and labels are preprocessed, and the model is run on the device (either CPU or GPU).
-    The predictions are then returned."""
-    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-    model.to(device)
-    inputs = processor(
+    """This function performs object detection and identification using the CLIP model + DETR"""
+    inputs = clip_processor(
         text=labels.split(","), images=image, return_tensors="pt", padding=True
     )
     inputs.to(device)
     with torch.no_grad():
-        outputs = model(**inputs)
+        outputs = clip_model(**inputs)
     logits_per_image = (
         outputs.logits_per_image
     )  # this is the image-text similarity score
@@ -93,26 +97,49 @@ def clip_predict(image, labels):
     return {x: y.item() for x, y in zip(labels.split(","), probs[0])}
 
 
-def owl_predict(img, labels, threshold):
-    """Runs OWL (Zero-Shot Object Detection) on a given image with the given labels and threshold.
-    The image and labels are preprocessed, and the model is run on the device (either CPU or GPU).
-    The predictions are then filtered based on the threshold and returned."""
-    checkpoint = "google/owlv2-base-patch16-ensemble"
-    detector = pipeline(model=checkpoint, task="zero-shot-object-detection", device=0)
-    predictions = detector(img, candidate_labels=labels.split(","))
-    predict_dict = {}
-    for prediction in predictions:
-        if prediction["score"] > threshold:
-            label = prediction["label"]
-            predict_dict[label] = [
-                (
-                    prediction["box"]["xmin"],
-                    prediction["box"]["xmax"],
-                    prediction["box"]["ymin"],
-                    prediction["box"]["ymax"],
-                )
-            ]
-    return predict_dict
+def clip_od_predict(img, labels, threshold):
+    def detect_objects(image):
+        with torch.no_grad():
+            inputs = detr_processor(images=image, return_tensors="pt").to(device)
+            outputs = detr_model(**inputs)
+            target_sizes = torch.tensor([image.size[::-1]])
+            results = detr_processor.post_process_object_detection(
+                outputs, threshold=0.5, target_sizes=target_sizes
+            )[0]
+        return results["boxes"]
+
+    def object_images(image, boxes):
+        image_arr = np.array(image)
+        all_images = []
+        for box in boxes:
+            # DETR returns top, left, bottom, right format
+            x1, y1, x2, y2 = [int(val) for val in box]
+            _image = image_arr[y1:y2, x1:x2]
+            all_images.append(_image)
+        return all_images
+
+
+    def identify_target(labels, images):
+        inputs = clip_processor(
+            text=labels.split(","), images=images, return_tensors="pt", padding=True
+        ).to(device)
+        with torch.no_grad():
+            outputs = clip_model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        most_similar_idx = torch.argmax(logits_per_image, dim=0).item()
+        return most_similar_idx
+
+    # detect object bounding boxes
+    detected_objects = detect_objects(img)
+
+    # get images of objects
+    images = object_images(img, detected_objects)
+
+    # identify target
+    idx = identify_target(labels, images)
+
+    # return bounding box of best match
+    return [int(val) for val in detected_objects[idx].tolist()]
 
 
 class VLMInput(BaseModel):
@@ -141,10 +168,10 @@ async def predict(data: VLMInput):
     return predict_dict
 
 
-@app.post("/owl_predict")
+@app.post("/clip_od_predict")
 async def predict(data: VLMInput):
     img = load_image(data.path_or_url)
-    predict_dict = owl_predict(img, data.labels, data.threshold)
+    predict_dict = clip_od_predict(img, data.labels, data.threshold)
     return predict_dict
 
 
