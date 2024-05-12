@@ -1,0 +1,20 @@
+pandas
+numpy
+seaborn
+ipykernel
+ipywidgets
+jupyterlab
+torch>=2.2.2
+torchvision>=0.17.2
+torchinfo
+transformers[torch]>=4.39.3
+datasets
+albumentations
+timm
+pycocotools #rcnn ft
+bitsandbytes
+accelerate
+trl # VLM training
+lmms-eval # VLM evaluation
+ultralytics
+torchmetrics
